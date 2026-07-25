@@ -15,12 +15,10 @@ import {
   deriveProtocolCounterPda,
   deriveReceiptPda,
   paymentGatewayIdl,
+  resolveRpcEndpoint,
   type DebtProcessor,
   type PaymentGateway,
 } from "@desafio/shared";
-
-const RPC_ENDPOINT =
-  process.env.NEXT_PUBLIC_SOLANA_RPC_URL ?? "https://api.devnet.solana.com";
 
 // PAYER_KEYPAIR_SECRET (the JSON array secret key, e.g. the contents of a solana-keygen
 // file, inlined) works on serverless hosts like Vercel where there's no local filesystem
@@ -106,7 +104,7 @@ export async function POST(request: Request): Promise<NextResponse> {
 
   try {
     const payer = loadPayerKeypair();
-    const connection = new Connection(RPC_ENDPOINT, "confirmed");
+    const connection = new Connection(resolveRpcEndpoint(), "confirmed");
     const provider = new AnchorProvider(connection, nodeWallet(payer), {
       commitment: "confirmed",
     });
