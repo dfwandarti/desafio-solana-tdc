@@ -1,0 +1,25 @@
+{
+  "name": "desafio-solana-tdc",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "idl:sync": "cp target/idl/debt_processor.json idls/debt_processor.json",
+    "seed": "tsx scripts/seed-demo-data.ts",
+    "dev:payer": "pnpm --filter payer-app dev",
+    "dev:dashboard": "pnpm --filter processor-dashboard dev"
+  },
+  "dependencies": {
+    "@anchor-lang/core": "^1.1.2",
+    "@desafio/shared": "workspace:*",
+    "@solana/web3.js": "^1.98.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3"
+  },
+  "packageManager": "pnpm@11.17.0",
+  "engines": {
+    "node": ">=22"
+  }
+}

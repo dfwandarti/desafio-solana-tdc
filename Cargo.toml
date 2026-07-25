@@ -1,0 +1,21 @@
+[workspace]
+resolver = "2"
+members = ["programs/*"]
+
+[workspace.dependencies]
+anchor-lang = "1.0"
+
+# Anchor's macro-generated code checks cfg values (anchor-debug, custom-heap, custom-panic,
+# target_os = "solana") that rustc's strict check-cfg lint doesn't know about; this is a
+# known, benign mismatch between Anchor's internals and newer rustc, not a real issue.
+[workspace.lints.rust]
+unexpected_cfgs = "allow"
+
+[profile.release]
+overflow-checks = true
+lto = "fat"
+codegen-units = 1
+opt-level = 3
+
+[profile.release.build-override]
+opt-level = 3

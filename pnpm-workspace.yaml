@@ -1,0 +1,17 @@
+packages:
+  - "apps/*"
+  - "packages/*"
+allowBuilds:
+  # Only esbuild is actually needed (tsx uses it to run scripts/seed-demo-data.ts).
+  # The rest come transitively from @solana/wallet-adapter-wallets' kitchen-sink of
+  # adapters (WalletConnect, hardware wallets, Stellar) — this demo only uses the
+  # Phantom/Solflare adapters, so none of these native builds are required.
+  '@stellar/stellar-sdk': false
+  blake-hash: false
+  bufferutil: false
+  esbuild: true
+  protobufjs: false
+  sharp: false
+  tiny-secp256k1: false
+  usb: false
+  utf-8-validate: false

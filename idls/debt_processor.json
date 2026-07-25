@@ -1,0 +1,620 @@
+{
+  "address": "12RNZJUaef67voHzcrQ7nXYrTyrCUKb7gVeZDyTjDeqx",
+  "metadata": {
+    "name": "debt_processor",
+    "version": "0.1.0",
+    "spec": "0.1.0"
+  },
+  "instructions": [
+    {
+      "name": "init_plate_catalog",
+      "discriminator": [
+        118,
+        27,
+        198,
+        38,
+        192,
+        92,
+        111,
+        168
+      ],
+      "accounts": [
+        {
+          "name": "admin",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "plate_catalog",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  108,
+                  97,
+                  116,
+                  101,
+                  95,
+                  99,
+                  97,
+                  116,
+                  97,
+                  108,
+                  111,
+                  103
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "plate"
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "plate",
+          "type": "string"
+        },
+        {
+          "name": "debts",
+          "type": {
+            "vec": {
+              "defined": {
+                "name": "DebtInput"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "initialize_protocol_counter",
+      "discriminator": [
+        194,
+        214,
+        112,
+        143,
+        247,
+        228,
+        225,
+        27
+      ],
+      "accounts": [
+        {
+          "name": "admin",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "protocol_counter",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  114,
+                  111,
+                  116,
+                  111,
+                  99,
+                  111,
+                  108,
+                  95,
+                  99,
+                  111,
+                  117,
+                  110,
+                  116,
+                  101,
+                  114
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "process_payment",
+      "discriminator": [
+        189,
+        81,
+        30,
+        198,
+        139,
+        186,
+        115,
+        23
+      ],
+      "accounts": [
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "plate_catalog",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  108,
+                  97,
+                  116,
+                  101,
+                  95,
+                  99,
+                  97,
+                  116,
+                  97,
+                  108,
+                  111,
+                  103
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "plate"
+              }
+            ]
+          }
+        },
+        {
+          "name": "protocol_counter",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  114,
+                  111,
+                  116,
+                  111,
+                  99,
+                  111,
+                  108,
+                  95,
+                  99,
+                  111,
+                  117,
+                  110,
+                  116,
+                  101,
+                  114
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "receipt",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  101,
+                  99,
+                  101,
+                  105,
+                  112,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "protocol_counter.next_protocol_number",
+                "account": "ProtocolCounter"
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "plate",
+          "type": "string"
+        },
+        {
+          "name": "debt_ids",
+          "type": "bytes"
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "PlateDebtCatalog",
+      "discriminator": [
+        167,
+        253,
+        233,
+        79,
+        250,
+        214,
+        45,
+        168
+      ]
+    },
+    {
+      "name": "ProtocolCounter",
+      "discriminator": [
+        119,
+        23,
+        204,
+        199,
+        153,
+        202,
+        252,
+        131
+      ]
+    },
+    {
+      "name": "Receipt",
+      "discriminator": [
+        39,
+        154,
+        73,
+        106,
+        80,
+        102,
+        145,
+        153
+      ]
+    }
+  ],
+  "events": [
+    {
+      "name": "DebtsPaid",
+      "discriminator": [
+        219,
+        112,
+        213,
+        16,
+        70,
+        156,
+        209,
+        41
+      ]
+    },
+    {
+      "name": "PlateCatalogInitialized",
+      "discriminator": [
+        185,
+        177,
+        4,
+        59,
+        147,
+        42,
+        114,
+        62
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "InvalidPlate",
+      "msg": "Plate must be 1-7 characters"
+    },
+    {
+      "code": 6001,
+      "name": "InvalidDebtCount",
+      "msg": "A catalog must have between 1 and 3 debts"
+    },
+    {
+      "code": 6002,
+      "name": "InvalidSelectionCount",
+      "msg": "Selection must be exactly 1 or 2 debts"
+    },
+    {
+      "code": 6003,
+      "name": "DuplicateDebtSelection",
+      "msg": "Duplicate debt id in selection"
+    },
+    {
+      "code": 6004,
+      "name": "DebtNotFound",
+      "msg": "Debt id not found in catalog"
+    },
+    {
+      "code": 6005,
+      "name": "DebtAlreadyPaid",
+      "msg": "Debt already paid"
+    },
+    {
+      "code": 6006,
+      "name": "ArithmeticOverflow",
+      "msg": "Arithmetic overflow"
+    }
+  ],
+  "types": [
+    {
+      "name": "DebtEntry",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "id",
+            "type": "u8"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "kind",
+            "type": {
+              "defined": {
+                "name": "DebtKind"
+              }
+            }
+          },
+          {
+            "name": "value",
+            "type": "u64"
+          },
+          {
+            "name": "paid",
+            "type": "bool"
+          }
+        ]
+      }
+    },
+    {
+      "name": "DebtInput",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "kind",
+            "type": {
+              "defined": {
+                "name": "DebtKind"
+              }
+            }
+          },
+          {
+            "name": "value",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "DebtKind",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "Ipva"
+          },
+          {
+            "name": "Licensing"
+          },
+          {
+            "name": "Fine"
+          }
+        ]
+      }
+    },
+    {
+      "name": "DebtsPaid",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "plate",
+            "type": "string"
+          },
+          {
+            "name": "protocol_number",
+            "type": "u64"
+          },
+          {
+            "name": "payer",
+            "type": "pubkey"
+          },
+          {
+            "name": "debt_ids",
+            "type": "bytes"
+          },
+          {
+            "name": "total_value",
+            "type": "u64"
+          },
+          {
+            "name": "paid_at",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "PaidDebtRecord",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "debt_id",
+            "type": "u8"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "kind",
+            "type": {
+              "defined": {
+                "name": "DebtKind"
+              }
+            }
+          },
+          {
+            "name": "value",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "PlateCatalogInitialized",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "plate",
+            "type": "string"
+          },
+          {
+            "name": "admin",
+            "type": "pubkey"
+          },
+          {
+            "name": "debt_count",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "PlateDebtCatalog",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "bump",
+            "type": "u8"
+          },
+          {
+            "name": "plate",
+            "type": "string"
+          },
+          {
+            "name": "admin",
+            "type": "pubkey"
+          },
+          {
+            "name": "debts",
+            "type": {
+              "vec": {
+                "defined": {
+                  "name": "DebtEntry"
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "ProtocolCounter",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "bump",
+            "type": "u8"
+          },
+          {
+            "name": "next_protocol_number",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Receipt",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "bump",
+            "type": "u8"
+          },
+          {
+            "name": "protocol_number",
+            "type": "u64"
+          },
+          {
+            "name": "plate",
+            "type": "string"
+          },
+          {
+            "name": "payer",
+            "type": "pubkey"
+          },
+          {
+            "name": "paid_debts",
+            "type": {
+              "vec": {
+                "defined": {
+                  "name": "PaidDebtRecord"
+                }
+              }
+            }
+          },
+          {
+            "name": "total_value",
+            "type": "u64"
+          },
+          {
+            "name": "paid_at",
+            "type": "i64"
+          },
+          {
+            "name": "status",
+            "type": {
+              "defined": {
+                "name": "ReceiptStatus"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "ReceiptStatus",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "Paid"
+          }
+        ]
+      }
+    }
+  ]
+}

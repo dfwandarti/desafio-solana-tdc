@@ -1,0 +1,30 @@
+[package]
+name = "payment-gateway"
+version = "0.1.0"
+edition = "2021"
+
+[lints]
+workspace = true
+
+[lib]
+crate-type = ["cdylib", "lib"]
+name = "payment_gateway"
+
+[features]
+no-entrypoint = []
+no-idl = []
+no-log-ix-name = []
+cpi = ["no-entrypoint"]
+idl-build = ["anchor-lang/idl-build"]
+default = []
+
+[dependencies]
+anchor-lang = { workspace = true }
+
+[dev-dependencies]
+debt-processor = { path = "../debt-processor", features = ["cpi"] }
+litesvm = "=0.12.0"
+solana-keypair = "3.1.2"
+solana-message = "3.1.0"
+solana-signer = "3.0.1"
+solana-transaction = "3.1.0"
