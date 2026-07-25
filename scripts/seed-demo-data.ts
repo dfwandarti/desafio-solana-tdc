@@ -49,6 +49,18 @@ const DEMO_PLATES: DemoPlate[] = [
     plate: "XYZ9876",
     debts: [{ description: "Multa - Estacionamento irregular", kind: FINE, value: 8_800 }],
   },
+  {
+    plate: "POW1234",
+    debts: [
+      { description: "IPVA 2026", kind: IPVA, value: 38_000 },
+      { description: "Multa - Excesso de velocidade", kind: FINE, value: 19_530 },
+      { description: "Licenciamento 2026", kind: LICENSING, value: 12_000 },
+    ],
+  },
+  {
+    plate: "CAT7594",
+    debts: [{ description: "Multa - Estacionamento irregular", kind: FINE, value: 8_800 }],
+  },
 ];
 
 const CLUSTER_URLS: Record<string, string> = {
