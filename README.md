@@ -92,3 +92,8 @@ needed. The receipt shows up in `processor-dashboard` within a few seconds. The 
 
 Re-run `anchor keys sync` after a fresh `anchor keys list`/keypair regeneration and update
 `Anchor.toml`'s `[programs.devnet]` section before deploying to devnet for the first time.
+
+## Consulting transaction
+
+You may consult one transaction information at:
+```https://explorer.solana.com/tx/46wuiyXsCZTn1uBtw7bPxhkxDaCnkh6weQWxbzWktExmaCHCe3N7VNhHRFpTwE6SuiKAy2Tey4kgkCxKDQCcst23?cluster=devnet```

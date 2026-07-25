@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.1.0",
   "scripts": {
-    "idl:sync": "cp target/idl/debt_processor.json idls/debt_processor.json",
+    "idl:sync": "mkdir -p idls/types && cp target/idl/debt_processor.json idls/debt_processor.json && cp target/idl/payment_gateway.json idls/payment_gateway.json && cp target/types/debt_processor.ts idls/types/debt_processor.ts && cp target/types/payment_gateway.ts idls/types/payment_gateway.ts",
     "seed": "tsx scripts/seed-demo-data.ts",
     "dev:payer": "pnpm --filter payer-app dev",
     "dev:dashboard": "pnpm --filter processor-dashboard dev"

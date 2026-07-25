@@ -22,11 +22,23 @@ import {
 const RPC_ENDPOINT =
   process.env.NEXT_PUBLIC_SOLANA_RPC_URL ?? "https://api.devnet.solana.com";
 
+// PAYER_KEYPAIR_SECRET (the JSON array secret key, e.g. the contents of a solana-keygen
+// file, inlined) works on serverless hosts like Vercel where there's no local filesystem
+// to point PAYER_KEYPAIR_PATH at. PAYER_KEYPAIR_PATH remains for local dev convenience.
 function loadPayerKeypair(): Keypair {
+  const secret = process.env.PAYER_KEYPAIR_SECRET;
+  if (secret) {
+    const raw = JSON.parse(secret) as number[];
+    return Keypair.fromSecretKey(Uint8Array.from(raw));
+  }
+
   const path = process.env.PAYER_KEYPAIR_PATH;
-  if (!path) throw new Error("PAYER_KEYPAIR_PATH is not configured");
-  const raw = JSON.parse(readFileSync(path, "utf-8")) as number[];
-  return Keypair.fromSecretKey(Uint8Array.from(raw));
+  if (path) {
+    const raw = JSON.parse(readFileSync(path, "utf-8")) as number[];
+    return Keypair.fromSecretKey(Uint8Array.from(raw));
+  }
+
+  throw new Error("Set PAYER_KEYPAIR_SECRET or PAYER_KEYPAIR_PATH");
 }
 
 // `new Wallet(payer)` from @anchor-lang/core hits an ESM/CJS interop issue under
