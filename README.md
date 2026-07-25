@@ -27,7 +27,8 @@ plate, the selected debts, and their values are durably persisted on-chain via C
 ```
 programs/debt-processor/     App 2's program (build first)
 programs/payment-gateway/    App 1's program (CPIs into debt-processor via declare_program!)
-idls/debt_processor.json     Committed IDL snapshot — declare_program! reads this
+idls/                        Committed IDL + generated TS types for both programs — the
+                              frontend imports from here, never from gitignored target/
 packages/shared/             PDA helpers, format helpers, IDL/type re-exports
 apps/payer-app/              Next.js — no wallet UI, signs server-side via /api/pay
 apps/processor-dashboard/    Next.js, read-only
@@ -41,14 +42,15 @@ Order matters — `payment-gateway` reads `debt-processor`'s IDL at compile time
 
 ```bash
 anchor build -p debt-processor
-cp target/idl/debt_processor.json idls/debt_processor.json   # or: pnpm idl:sync
+pnpm idl:sync    # copies both programs' IDL + generated TS types into idls/
 anchor build -p payment-gateway
 # subsequent full-workspace builds:
 anchor build
 ```
 
-Re-run all three steps whenever `debt-processor`'s accounts/instructions change — a stale
-`idls/debt_processor.json` fails silently otherwise.
+Re-run `pnpm idl:sync` whenever either program's accounts/instructions change — the frontend
+reads exclusively from the committed `idls/` snapshot, not from gitignored `target/`, so a
+stale sync fails silently (old types/IDL, no build error) rather than loudly.
 
 ## Test
 
@@ -69,6 +71,7 @@ cp apps/processor-dashboard/.env.local.example apps/processor-dashboard/.env.loc
 
 # 2. Set PAYER_KEYPAIR_PATH in apps/payer-app/.env.local (server-only var) to a funded
 #    keypair file — this is the account that signs every payment on the citizen's behalf.
+#    (Deploying to a serverless host instead? Use PAYER_KEYPAIR_SECRET — see below.)
 
 # 3. Deploy (devnet shown; swap --provider.cluster for localnet)
 anchor deploy --provider.cluster devnet
@@ -84,6 +87,27 @@ pnpm dev:dashboard     # http://localhost:3001
 Pick a seeded plate on `payer-app`, select 1-2 debts, and click Pagar — no wallet connection
 needed. The receipt shows up in `processor-dashboard` within a few seconds. The keypair at
 `PAYER_KEYPAIR_PATH` needs enough SOL to cover network fees for every payment it signs.
+
+## Deploy to Vercel
+
+This is a pnpm-workspace monorepo with two independent Next.js apps, so it needs **two
+separate Vercel projects** pointing at the same repo:
+
+| Vercel project | Root Directory | Environment variables |
+|---|---|---|
+| payer-app | `apps/payer-app` | `NEXT_PUBLIC_SOLANA_RPC_URL`, `PAYER_KEYPAIR_SECRET` |
+| processor-dashboard | `apps/processor-dashboard` | `NEXT_PUBLIC_SOLANA_RPC_URL` |
+
+Vercel auto-detects the pnpm workspace (via `pnpm-workspace.yaml` at the repo root) and
+installs from the repo root even though the build runs inside Root Directory, so the
+`@desafio/shared` workspace dependency resolves correctly with no extra config.
+
+For `PAYER_KEYPAIR_SECRET`, paste the JSON array contents of the signing keypair's file
+(e.g. `cat ~/.config/solana/id.json`) as-is into Vercel's environment variable value —
+`PAYER_KEYPAIR_PATH` won't work there since Vercel's functions have no access to your local
+filesystem. Treat this the same as any other private key: anyone with access to that
+Vercel project's settings can read it back out. Fine for a devnet demo wallet; do not reuse
+a mainnet key this way.
 
 ## Program IDs (localnet, from `anchor keys list`)
 
